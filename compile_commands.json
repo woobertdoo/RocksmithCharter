@@ -100,5 +100,11 @@
   "command": "/usr/bin/c++ -DJUCE_DEBUG=1 -DJUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1 -I/home/jamieharris/Documents/RocksmithCharterCMAKE/Source/Chart -I/home/jamieharris/Documents/RocksmithCharterCMAKE/RocksmithCharter_artefacts/JuceLibraryCode -g -o CMakeFiles/Chart.dir/Beat.cpp.o -c /home/jamieharris/Documents/RocksmithCharterCMAKE/Source/Chart/Beat.cpp",
   "file": "/home/jamieharris/Documents/RocksmithCharterCMAKE/Source/Chart/Beat.cpp",
   "output": "Source/Chart/CMakeFiles/Chart.dir/Beat.cpp.o"
+},
+{
+  "directory": "/home/jamieharris/Documents/RocksmithCharterCMAKE/Source/Chart",
+  "command": "/usr/bin/c++ -DJUCE_DEBUG=1 -DJUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1 -I/home/jamieharris/Documents/RocksmithCharterCMAKE/Source/Chart -I/home/jamieharris/Documents/RocksmithCharterCMAKE/RocksmithCharter_artefacts/JuceLibraryCode -g -o CMakeFiles/Chart.dir/NoteBuilder.cpp.o -c /home/jamieharris/Documents/RocksmithCharterCMAKE/Source/Chart/NoteBuilder.cpp",
+  "file": "/home/jamieharris/Documents/RocksmithCharterCMAKE/Source/Chart/NoteBuilder.cpp",
+  "output": "Source/Chart/CMakeFiles/Chart.dir/NoteBuilder.cpp.o"
 }
 ]

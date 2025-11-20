@@ -5,4 +5,5 @@
 **/CMakeFiles/
 **/*.a
 RocksmithCharter_artefacts/
+.cache/
 

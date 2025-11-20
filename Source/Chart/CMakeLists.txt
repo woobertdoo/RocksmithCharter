@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
-add_library(Chart Chart.cpp Chart.h Note.cpp Note.h Bar.cpp Bar.h Beat.cpp Beat.h)
+add_library(Chart Chart.cpp Chart.h Note.cpp Note.h Bar.cpp Bar.h Beat.cpp Beat.h NoteBuilder.h NoteBuilder.cpp)
 
 target_include_directories(Chart 
     PUBLIC

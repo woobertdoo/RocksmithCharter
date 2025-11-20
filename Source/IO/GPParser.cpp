@@ -1,19 +1,26 @@
 #include "GPParser.h"
+#include <bits/stdc++.h>
 #include <juce_core/juce_core.h>
+#include <memory>
+#include <sstream>
 
 // ROOT NODE IS GPIF
 
-juce::String GPParser::GetGPVersion(std::unique_ptr<juce::XmlElement>& root) {
+juce::String GPParser::GetGPVersion() {
     // The value of the node is considered a child
     const juce::XmlElement* versionNode =
-        root->getChildByName("GPVersion")->getFirstChildElement();
+        rootNode->getChildByName("GPVersion")->getFirstChildElement();
     return versionNode->getText();
 }
 
-std::vector<std::unique_ptr<juce::XmlElement>>
-GPParser::GetMasterBars(std::unique_ptr<juce::XmlElement>& root) {
-    std::vector<std::unique_ptr<juce::XmlElement>> masterBars;
-    const juce::XmlElement* masterBarsNode = root->getChildByName("MasterBars");
+void GPParser::SetRoot(std::unique_ptr<juce::XmlElement>& root) {
+    *rootNode = *root;
+}
+
+XmlVector GPParser::GetMasterBars() {
+    XmlVector masterBars;
+    const juce::XmlElement* masterBarsNode =
+        rootNode->getChildByName("MasterBars");
 
     int id = 1;
     for (auto child : masterBarsNode->getChildIterator()) {
@@ -28,14 +35,53 @@ GPParser::GetMasterBars(std::unique_ptr<juce::XmlElement>& root) {
                 child->getChildByName("Bars")->getAllSubText());
             truncMasterBar->addChildElement(barsNode);
             masterBars.push_back(juce::rawToUniquePtr(truncMasterBar));
-            printf("Added master bar %d\n", id);
             id++;
         }
     }
     return masterBars;
 }
-void GPParser::FindTheWeirdElement(std::unique_ptr<juce::XmlElement>& root) {
-    const juce::XmlElement* masterBarsNode = root->getChildByName("MasterBars");
+
+XmlVector GPParser::GetBars(std::unique_ptr<juce::XmlElement>& masterBar) {
+    XmlVector bars;
+    const juce::XmlElement* barsNode = rootNode->getChildByName("Bars");
+    const std::string barsToFind =
+        masterBar->getChildByName("Bars")->getAllSubText().toStdString();
+    std::vector<int> barIds = splitIds(barsToFind);
+
+    for (auto id : barIds) {
+        const juce::XmlElement* foundBar =
+            barsNode->getChildByAttribute("id", juce::String(id));
+        if (!barsNode) {
+            printf("Couldn't find bar with id %d\n", id);
+            continue;
+        }
+
+        const juce::XmlElement* foundVoices =
+            foundBar->getChildByName("Voices");
+
+        if (!foundVoices) {
+            printf("Something went very wrong, this bar (%d) has no voices!\n",
+                   id);
+            continue;
+        }
+
+        juce::XmlElement* truncBar = new juce::XmlElement("Bar");
+        juce::XmlElement* voices = new juce::XmlElement("Voices");
+        juce::String firstVoiceId =
+            foundVoices->getAllSubText().upToFirstOccurrenceOf(" ", false,
+                                                               false);
+        voices->addTextElement(firstVoiceId);
+        truncBar->setAttribute("id", id);
+        truncBar->addChildElement(voices);
+        bars.push_back(juce::rawToUniquePtr(truncBar));
+    }
+
+    return bars;
+}
+
+void GPParser::FindTheWeirdElement() {
+    const juce::XmlElement* masterBarsNode =
+        rootNode->getChildByName("MasterBars");
 
     int id = 1;
     for (auto child : masterBarsNode->getChildIterator()) {
@@ -48,4 +94,25 @@ void GPParser::FindTheWeirdElement(std::unique_ptr<juce::XmlElement>& root) {
         id++;
     }
     delete masterBarsNode;
+}
+
+/* For splitting children IDs to search for them
+ *
+ * i.e. splits a node <Nodes>1 2 3 4</Nodes>
+ * into a vector {1, 2, 3, 4} to search for <Node id="1"> etc..
+ * */
+std::vector<int> GPParser::splitIds(std::string ids) {
+    std::vector<int> splitVector;
+    std::stringstream ss(ids);
+
+    std::string t;
+
+    char del = ' ';
+
+    while (getline(ss, t, del)) {
+        int t_int = std::stoi(t);
+        splitVector.push_back(t_int);
+    }
+
+    return splitVector;
 }

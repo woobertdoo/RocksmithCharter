@@ -4,12 +4,26 @@
 #include <memory>
 #include <vector>
 
+using XmlVector = std::vector<std::unique_ptr<juce::XmlElement>>;
+
 class GPParser {
   public:
-    static juce::String GetGPVersion(std::unique_ptr<juce::XmlElement>& root);
+    GPParser(std::unique_ptr<juce::XmlElement>& root) { rootNode = root.get(); }
 
-    static std::vector<std::unique_ptr<juce::XmlElement>>
-    GetMasterBars(std::unique_ptr<juce::XmlElement>& root);
+    ~GPParser() {}
 
-    static void FindTheWeirdElement(std::unique_ptr<juce::XmlElement>& root);
+    juce::String GetGPVersion();
+
+    void SetRoot(std::unique_ptr<juce::XmlElement>& root);
+
+    XmlVector GetMasterBars();
+
+    XmlVector GetBars(std::unique_ptr<juce::XmlElement>& masterBar);
+
+    void FindTheWeirdElement();
+
+  private:
+    juce::XmlElement* rootNode;
+
+    std::vector<int> splitIds(std::string ids);
 };

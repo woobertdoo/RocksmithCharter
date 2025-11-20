@@ -75,17 +75,20 @@ class MainWindowTutorialApplication : public juce::JUCEApplication {
 
             //            GPParser::FindTheWeirdElement(gpScore);
 
-            std::vector<std::unique_ptr<juce::XmlElement>> masterBars =
-                GPParser::GetMasterBars(gpScore);
+            gpParser = juce::rawToUniquePtr(new GPParser(gpScore));
 
-            for (auto& masterBar : masterBars) {
-                int masterBarID = masterBar->getChildByName("ID")
-                                      ->getAllSubText()
-                                      .getIntValue();
-                juce::String childBars =
-                    masterBar->getChildByName("Bars")->getAllSubText();
-                printf("master bar %d has bars %s\n", masterBarID,
-                       childBars.toStdString().c_str());
+            std::vector<std::unique_ptr<juce::XmlElement>> masterBars =
+                gpParser->GetMasterBars();
+
+            XmlVector bars = gpParser->GetBars(masterBars.at(0));
+
+            for (auto& bar : bars) {
+                int barId = bar->getIntAttribute("id");
+
+                printf("Bar %d has voice %d\n", barId,
+                       bar->getChildByName("Voices")
+                           ->getAllSubText()
+                           .getIntValue());
             }
         }
 
@@ -95,6 +98,7 @@ class MainWindowTutorialApplication : public juce::JUCEApplication {
 
       private:
         std::unique_ptr<GPExtractor> gpExtractor;
+        std::unique_ptr<GPParser> gpParser;
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainWindow)
     };
 
