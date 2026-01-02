@@ -24,6 +24,12 @@ enum RhythmFlag {
     RHYTHM_THIRTYSECOND = 32
 };
 
+/*
+ * @param: num is the amount of notes
+ * @param: den is the note space
+ * EG: A standard triplet has num 3 and den 2,
+ * 3 notes in the space of 2
+ */
 struct Tuple {
     int num;
     int den;
