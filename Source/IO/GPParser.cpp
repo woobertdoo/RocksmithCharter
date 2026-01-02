@@ -39,7 +39,14 @@
  *     .
  *   </Tracks>
  *   <MasterBars>
- *      <MasterBar>
+ *      -- Each master bar refers to ONE BAR.
+ *      -- Each bar in the <Bars> tag is for a different TRACK (guitar 1, guitar
+ * 2, bass, etc.).
+ *      -- If the file has some sort of piano/keyboard, there will be two
+ * different BAR TAGS for that track, one for the right hand and one for the
+ * left hand.
+ *
+ *       <MasterBar>
  *          <Time>n/d</Time>
  *          <Repeat start="true/false" end="true/false" count=x/>
  *          <Bars>a b c ... </Bars>
