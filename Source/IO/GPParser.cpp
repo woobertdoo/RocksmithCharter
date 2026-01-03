@@ -66,6 +66,59 @@
  *      .
  *      .
  *   </Bars>
+ *
+ *   <Voices>
+ *      <Voice id="x">
+ *      <!-- Note: Beats can repeat (0 1 2 1 2 3, etc.) -->
+ *          <Beats>a b c d ... </Beats>
+ *      </Voice>
+ *   </Voices>
+ *
+ *  <Beats>
+ *      <Beat id="x">
+ *          <Rhythm ref="x" />
+ *          <Notes>a b c ...</Notes>
+ *          <!-- Unsure about arpeggio support atm -->
+ *          <Arpeggio>Down/Up</Arpeggio>
+ *      </Beat>
+ *  </Beats>
+ *
+ *  <Notes>
+ *      <Note id="x">
+ *
+ *          <Tie origin="true/false" destination="true/false"/>
+ *
+ *          <Property name="Fret">
+ *              <Fret>x</Fret>
+ *          </Property>
+ *
+ *          <!-- Slide Flags
+ *
+ *          1 = Shift (No LinkNext)
+ *          2 = Legato (LinkNext)
+ *          4 = Slide Out Down
+ *          8 = Slide Out Up
+ *          16 = Slide In From Below
+ *          32 = Slide In From Above
+ *
+ *          -->
+ *          <Property name="Slide">
+ *          <Flags>x</Flags
+ *          </Property>
+ *
+ *          <Property name="String">
+ *              <String>x</String>
+ *          </Property>
+ *      </Note>
+ *  </Notes>
+ *
+ *  <Rhythms>
+ *      <Rhythm id="x">
+ *          <NoteValue>Whole/Half/Quarter/Eighth/16th/...</NoteValue>
+ *          <PrimaryTuplet num="n" den="d"/>
+ *          <AugmentationDot count="x"/>
+ *      </Rhythm>
+ *  </Rhythms>
  * </GPIF>
  *
  *
