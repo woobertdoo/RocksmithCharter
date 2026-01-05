@@ -6,4 +6,5 @@
 **/*.a
 RocksmithCharter_artefacts/
 .cache/
+Content/
 

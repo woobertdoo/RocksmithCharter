@@ -2,6 +2,7 @@
 
 #include <juce_core/juce_core.h>
 #include <memory>
+#include <unordered_map>
 #include <vector>
 
 using XmlVector = std::vector<std::unique_ptr<juce::XmlElement>>;
@@ -18,12 +19,17 @@ class GPParser {
 
     XmlVector GetMasterBars();
 
-    XmlVector GetBars(std::unique_ptr<juce::XmlElement>& masterBar);
+    XmlVector GetBars(std::unique_ptr<juce::XmlElement>& masterBar,
+                      std::string trackName);
+
+    void PopulateTrackMap(std::unique_ptr<juce::XmlElement>& root);
 
     void FindTheWeirdElement();
 
   private:
     juce::XmlElement* rootNode;
+
+    std::unordered_map<std::string, int> barOffsets;
 
     std::vector<int> splitIds(std::string ids);
 };

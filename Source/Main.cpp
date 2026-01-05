@@ -80,16 +80,19 @@ class MainWindowTutorialApplication : public juce::JUCEApplication {
             std::vector<std::unique_ptr<juce::XmlElement>> masterBars =
                 gpParser->GetMasterBars();
 
-            XmlVector bars = gpParser->GetBars(masterBars.at(0));
+            gpParser->PopulateTrackMap(gpScore);
 
-            for (auto& bar : bars) {
-                int barId = bar->getIntAttribute("id");
+            /*  XmlVector bars = gpParser->GetBars(masterBars.at(0));
 
-                printf("Bar %d has voice %d\n", barId,
-                       bar->getChildByName("Voices")
-                           ->getAllSubText()
-                           .getIntValue());
-            }
+              for (auto& bar : bars) {
+                  int barId = bar->getIntAttribute("id");
+
+                  printf("Bar %d has voice %d\n", barId,
+                         bar->getChildByName("Voices")
+                             ->getAllSubText()
+                             .getIntValue());
+              }
+          */
         }
 
         void closeButtonPressed() override {
