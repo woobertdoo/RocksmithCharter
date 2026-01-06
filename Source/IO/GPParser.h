@@ -17,10 +17,9 @@ class GPParser {
 
     void SetRoot(std::unique_ptr<juce::XmlElement>& root);
 
-    XmlVector GetMasterBars();
+    XmlVector GetMasterBars(std::string trackName);
 
-    XmlVector GetBars(std::unique_ptr<juce::XmlElement>& masterBar,
-                      std::string trackName);
+    XmlVector GetBars(std::vector<int> barIds);
 
     void PopulateTrackMap(std::unique_ptr<juce::XmlElement>& root);
 
@@ -29,7 +28,11 @@ class GPParser {
   private:
     juce::XmlElement* rootNode;
 
+    int masterBarLength;
+
     std::unordered_map<std::string, int> barOffsets;
 
     std::vector<int> splitIds(std::string ids);
+
+    std::vector<int> getTrackBars(std::string trackName);
 };

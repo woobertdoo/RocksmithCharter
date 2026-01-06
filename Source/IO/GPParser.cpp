@@ -167,37 +167,66 @@ void GPParser::PopulateTrackMap(std::unique_ptr<juce::XmlElement>& root) {
     }
 }
 
-XmlVector GPParser::GetMasterBars() {
-    XmlVector masterBars;
+XmlVector GPParser::GetMasterBars(std::string trackName) {
+    XmlVector trackBars;
     const juce::XmlElement* masterBarsNode =
         rootNode->getChildByName("MasterBars");
+    const juce::XmlElement* firstMasterBar =
+        masterBarsNode->getChildByName("MasterBar");
+    const juce::XmlElement* firstBarSet =
+        firstMasterBar->getChildByName("Bars");
 
-    int id = 1;
-    for (auto child : masterBarsNode->getChildIterator()) {
-        if (child->hasTagName("MasterBar")) {
-            juce::XmlElement* truncMasterBar =
-                new juce::XmlElement("MasterBar");
-            juce::XmlElement* masterBarID = new juce::XmlElement("ID");
-            masterBarID->addTextElement(juce::String(id));
-            truncMasterBar->addChildElement(masterBarID);
-            juce::XmlElement* barsNode = new juce::XmlElement("Bars");
-            barsNode->addTextElement(
-                child->getChildByName("Bars")->getAllSubText());
-            truncMasterBar->addChildElement(barsNode);
-            masterBars.push_back(juce::rawToUniquePtr(truncMasterBar));
-            id++;
+    masterBarLength = firstBarSet->getAllSubText().getTrailingIntValue() + 1;
+
+    std::vector<int> trackBarIds;
+    std::string ids;
+
+    for (auto masterBar : masterBarsNode->getChildIterator()) {
+
+        std::vector<int> barIds = splitIds(
+            masterBar->getChildByName("Bars")->getAllSubText().toStdString());
+
+        const int trackBarOffset = barOffsets[trackName];
+
+        for (int id : barIds) {
+            if (id % masterBarLength != trackBarOffset) {
+                continue;
+            }
+            ids.append(std::to_string(id));
+            ids.append(" ");
+            trackBarIds.push_back(id);
         }
+
+        // juce::XmlElement* truncMasterBar =
+        //     new juce::XmlElement("MasterBar");
+        // juce::XmlElement* masterBarID = new juce::XmlElement("ID");
+        // masterBarID->addTextElement(juce::String(id));
+        // truncMasterBar->addChildElement(masterBarID);
+        // juce::XmlElement* barsNode = new juce::XmlElement("Bars");
+        // barsNode->addTextElement(
+        //     child->getChildByName("Bars")->getAllSubText());
+        // truncMasterBar->addChildElement(barsNode);
+        // masterBarspush_back(juce::rawToUniquePtr(truncMasterBar));
+        // id++;.
     }
-    return masterBars;
+    // Remove trailing space from ids string
+    ids.pop_back();
+    juce::XmlElement* trackBarNode = new juce::XmlElement("TrackBars");
+    juce::XmlElement* trackNameNode = new juce::XmlElement("TrackName");
+    trackNameNode->addTextElement(juce::String(trackName));
+    juce::XmlElement* idsNode = new juce::XmlElement("Ids");
+    idsNode->addTextElement(juce::String(ids));
+
+    trackBarNode->addChildElement(trackNameNode);
+    trackBarNode->addChildElement(idsNode);
+
+    trackBars.push_back(juce::rawToUniquePtr(trackBarNode));
+    return trackBars;
 }
 
-XmlVector GPParser::GetBars(std::unique_ptr<juce::XmlElement>& masterBar,
-                            std::string trackName) {
+XmlVector GPParser::GetBars(std::vector<int> barIds) {
     XmlVector bars;
     const juce::XmlElement* barsNode = rootNode->getChildByName("Bars");
-    const std::string barsToFind =
-        masterBar->getChildByName("Bars")->getAllSubText().toStdString();
-    std::vector<int> barIds = splitIds(barsToFind);
 
     for (auto id : barIds) {
         const juce::XmlElement* foundBar =
@@ -267,3 +296,5 @@ std::vector<int> GPParser::splitIds(std::string ids) {
 
     return splitVector;
 }
+
+std::vector<int> GPParser::getTrackBars(std::string trackName) {}

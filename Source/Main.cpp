@@ -77,10 +77,22 @@ class MainWindowTutorialApplication : public juce::JUCEApplication {
 
             gpParser = juce::rawToUniquePtr(new GPParser(gpScore));
 
-            std::vector<std::unique_ptr<juce::XmlElement>> masterBars =
-                gpParser->GetMasterBars();
-
             gpParser->PopulateTrackMap(gpScore);
+            std::vector<std::unique_ptr<juce::XmlElement>> masterBars =
+                gpParser->GetMasterBars("Drumkit");
+
+            std::string trackName = masterBars[0]
+                                        ->getChildByName("TrackName")
+                                        ->getAllSubText()
+                                        .toStdString();
+
+            std::string bars = masterBars[0]
+                                   ->getChildByName("Ids")
+                                   ->getAllSubText()
+                                   .toStdString();
+
+            printf("Track %s uses bars %s !\n", trackName.c_str(),
+                   bars.c_str());
 
             /*  XmlVector bars = gpParser->GetBars(masterBars.at(0));
 
