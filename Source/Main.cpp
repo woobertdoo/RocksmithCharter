@@ -6,14 +6,13 @@
   ==============================================================================
 */
 
-#include <juce_core/juce_core.h>
-#include <juce_core/system/juce_PlatformDefs.h>
-#include <juce_gui_basics/juce_gui_basics.h>
 #include <memory>
 
 #include "Chart/Chart.h"
 #include "IO/GPExtractor.h"
 #include "IO/GPParser.h"
+
+#include "GUI/MainComponent.h"
 
 //==============================================================================
 class MainWindowTutorialApplication : public juce::JUCEApplication {
@@ -22,9 +21,11 @@ class MainWindowTutorialApplication : public juce::JUCEApplication {
     MainWindowTutorialApplication() {}
 
     const juce::String getApplicationName() override {
-        return "RocksmithCharter";
+        return JUCE_APPLICATION_NAME_STRING;
     }
-    const juce::String getApplicationVersion() override { return "0.0.1"; }
+    const juce::String getApplicationVersion() override {
+        return JUCE_APPLICATION_VERSION_STRING;
+    }
     bool moreThanOneInstanceAllowed() override { return true; }
 
     //==============================================================================
@@ -59,10 +60,13 @@ class MainWindowTutorialApplication : public juce::JUCEApplication {
         MainWindow(juce::String name)
             : DocumentWindow(name, juce::Colours::lightgrey,
                              DocumentWindow::allButtons) {
-            centreWithSize(300, 200);
+            printf("Setting Main Component\n");
+            setContentOwned(new MainComponent(), true);
+            printf("Finished Setting Main Component\n");
             setUsingNativeTitleBar(true);
+            centreWithSize(getWidth(), getHeight());
             setVisible(true);
-            loadGPFile();
+            //            loadGPFile();
         }
 
         void loadGPFile() {
@@ -114,6 +118,7 @@ class MainWindowTutorialApplication : public juce::JUCEApplication {
       private:
         std::unique_ptr<GPExtractor> gpExtractor;
         std::unique_ptr<GPParser> gpParser;
+        MainComponent* mainComponent;
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainWindow)
     };
 

@@ -1,7 +1,6 @@
 #include "GPParser.h"
 #include <bits/stdc++.h>
 #include <hash_map>
-#include <juce_core/juce_core.h>
 #include <memory>
 #include <sstream>
 
@@ -108,6 +107,18 @@
  *          <Flags>x</Flags
  *          </Property>
  *
+ *          <!-- Don't know if we care about the Enable tags -->
+ *
+ *          Enable Tag Properties:
+ *          HopoOrigin
+ *          HopoDestination
+ *          LeftHandTapped
+ *          Tapped
+ *
+ *          <Property name=*prop*>
+ *              <Enable />
+ *          </Property>
+ *
  *          <Property name="String">
  *              <String>x</String>
  *          </Property>
@@ -196,18 +207,6 @@ XmlVector GPParser::GetMasterBars(std::string trackName) {
             ids.append(" ");
             trackBarIds.push_back(id);
         }
-
-        // juce::XmlElement* truncMasterBar =
-        //     new juce::XmlElement("MasterBar");
-        // juce::XmlElement* masterBarID = new juce::XmlElement("ID");
-        // masterBarID->addTextElement(juce::String(id));
-        // truncMasterBar->addChildElement(masterBarID);
-        // juce::XmlElement* barsNode = new juce::XmlElement("Bars");
-        // barsNode->addTextElement(
-        //     child->getChildByName("Bars")->getAllSubText());
-        // truncMasterBar->addChildElement(barsNode);
-        // masterBarspush_back(juce::rawToUniquePtr(truncMasterBar));
-        // id++;.
     }
     // Remove trailing space from ids string
     ids.pop_back();

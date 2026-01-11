@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
-add_library(GUI MainComponent.h MainComponent.cpp)
+add_library(GUI MainComponent.h MainComponent.cpp TimelinePanel.h TimelinePanel.cpp EditionPanel.h EditionPanel.cpp PreviewPanel.h PreviewPanel.cpp)
 
 target_include_directories(GUI 
     PUBLIC

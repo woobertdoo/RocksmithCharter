@@ -1,6 +1,5 @@
 #include "GPExtractor.h"
 #include <cstdio>
-#include <juce_core/juce_core.h>
 #include <memory>
 
 GPError

@@ -12,12 +12,24 @@
 
 //==============================================================================
 MainComponent::MainComponent() {
+    timelinePanel = new TimelinePanel();
+    addAndMakeVisible(timelinePanel);
+
+    editionPanel = new EditionPanel();
+    addAndMakeVisible(editionPanel);
+
+    previewPanel = new PreviewPanel();
+    addAndMakeVisible(previewPanel);
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
-    setSize(400, 300);
+    setSize(1600, 900);
 }
 
-MainComponent::~MainComponent() {}
+MainComponent::~MainComponent() {
+    delete timelinePanel;
+    delete editionPanel;
+    delete previewPanel;
+}
 
 void MainComponent::paint(juce::Graphics& g) {
     /* This demo code just fills the component's background and
@@ -29,13 +41,19 @@ void MainComponent::paint(juce::Graphics& g) {
     g.fillAll(juce::Colours::lightblue);
     g.setColour(juce::Colours::darkblue);
     g.setFont(20.0f);
-    g.drawText(currentSizeAsString, getLocalBounds(),
-               juce::Justification::centred, true);
 }
 
 void MainComponent::resized() {
     // This method is where you should set the bounds of any child
     // components that your component contains..
-    currentSizeAsString =
-        juce::String(getWidth()) + " x " + juce::String(getHeight());
+    auto area = getLocalBounds();
+    int timelinePanelHeight = getHeight() / 2;
+
+    timelinePanel->setBounds(area.removeFromTop(timelinePanelHeight));
+
+    int editionPanelWidth = getWidth() / 3;
+
+    editionPanel->setBounds(area.removeFromLeft(editionPanelWidth));
+
+    previewPanel->setBounds(area);
 }

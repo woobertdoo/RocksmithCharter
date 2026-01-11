@@ -11,8 +11,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_BUILD_TYPE Debug)
 
 add_compile_definitions(JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1
-                        JUCE_DEBUG=1
-                    )
+                        JUCE_DEBUG=1)
 
 # If you've installed JUCE somehow (via a package manager, or directly using the CMake install
 # target), you'll need to tell this project that it depends on the installed copy of JUCE. If you've
@@ -56,6 +55,10 @@ add_subdirectory(Source)
 target_sources(RocksmithCharter
     PRIVATE
         Source/Main.cpp
+        Source/GUI/MainComponent.cpp
+        Source/GUI/TimelinePanel.cpp
+        Source/GUI/EditionPanel.cpp
+        Source/GUI/PreviewPanel.cpp
 )
 # `target_compile_definitions` adds some preprocessor definitions to our target. In a Projucer
 # project, these might be passed in the 'Preprocessor Definitions' field. JUCE modules also make use
@@ -72,6 +75,8 @@ target_compile_definitions(RocksmithCharter
         JUCE_APPLICATION_NAME_STRING="$<TARGET_PROPERTY:RocksmithCharter,JUCE_PRODUCT_NAME>"
         JUCE_APPLICATION_VERSION_STRING="$<TARGET_PROPERTY:RocksmithCharter,JUCE_VERSION>"
 )
+
+set_property(TARGET RocksmithCharter PROPERTY CXX_STANDARD 17)
 
 
 # If your target needs extra binary assets, you can add them here. The first argument is the name of
@@ -94,6 +99,7 @@ target_link_libraries(RocksmithCharter
         # GuiAppData            # If we'd created a binary data target, we'd link to it here
         GUI
         juce::juce_gui_extra
+        juce::juce_gui_basics
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags

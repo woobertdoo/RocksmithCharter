@@ -9,6 +9,9 @@
 */
 
 #pragma once
+#include "EditionPanel.h"
+#include "PreviewPanel.h"
+#include "TimelinePanel.h"
 #include <juce_gui_basics/juce_gui_basics.h>
 
 //==============================================================================
@@ -24,6 +27,9 @@ class MainComponent : public juce::Component {
 
   private:
     juce::String currentSizeAsString;
+    TimelinePanel* timelinePanel;
+    PreviewPanel* previewPanel;
+    EditionPanel* editionPanel;
 
   private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
