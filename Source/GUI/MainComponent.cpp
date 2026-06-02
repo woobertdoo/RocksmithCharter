@@ -51,7 +51,7 @@ void MainComponent::resized() {
 
     timelinePanel->setBounds(area.removeFromTop(timelinePanelHeight));
 
-    int editionPanelWidth = getWidth() / 3;
+    int editionPanelWidth = (getWidth() / 5) * 2;
 
     editionPanel->setBounds(area.removeFromLeft(editionPanelWidth));
 

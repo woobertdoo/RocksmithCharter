@@ -7,4 +7,4 @@
 RocksmithCharter_artefacts/
 .cache/
 Content/
-
+compile_commands.json

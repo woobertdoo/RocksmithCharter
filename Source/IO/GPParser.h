@@ -1,6 +1,8 @@
 #pragma once
 
 #include <juce_core/juce_core.h>
+#include "Note.h"
+#include "NoteBuilder.h"
 #include <memory>
 #include <unordered_map>
 #include <vector>
@@ -20,6 +22,9 @@ class GPParser {
     XmlVector GetMasterBars(std::string trackName);
 
     XmlVector GetBars(std::vector<int> barIds);
+    XmlVector GetVoices(std::vector<int> voiceIds);
+
+    std::vector<Note*> ParseNotes(int beatId); 
 
     void PopulateTrackMap(std::unique_ptr<juce::XmlElement>& root);
 
@@ -30,9 +35,13 @@ class GPParser {
 
     int masterBarLength;
 
+    RhythmFlag NoteValueToFlag(juce::String noteValue);
+
     std::unordered_map<std::string, int> barOffsets;
 
     std::vector<int> splitIds(std::string ids);
 
     std::vector<int> getTrackBars(std::string trackName);
+
+    NoteBuilder nb;
 };

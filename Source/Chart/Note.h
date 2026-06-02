@@ -2,6 +2,7 @@
 
 /* TECHNIQUE FLAGS */
 #include <cstdint>
+
 enum NoteFlag {
     NOTE_HOPO_SRC,
     NOTE_HOPO_DEST,
@@ -16,6 +17,7 @@ enum NoteFlag {
 
 /* RHYTHM FLAGS */
 enum RhythmFlag {
+    RHYTHM_INVALID = -1,
     RHYTHM_WHOLE = 1,
     RHYTHM_HALF = 2,
     RHYTHM_QUARTER = 4,
@@ -48,12 +50,14 @@ class Note {
 
     const int GetFret() { return this->fretNum; };
     const int GetString() { return this->stringNum; };
-    const float GetLengthInBeats() { return this->lengthInBeats; };
+    const int GetLengthInTicks() { return this->lengthInTicks; };
     const Rhythm GetRhythm() { return this->rhythm; };
+    const int GetBeatOffsetTicks() { return this->beatOffsetTicks; }; 
     void SetFret(int);
     void SetString(int);
     void SetRhythm(Rhythm rhythm) { this->rhythm = rhythm; };
-    void SetLengthInBeats(float length) { this->lengthInBeats = length; };
+    void SetLengthInTicks(int length) { this->lengthInTicks = length; };
+    void SetBeatOffsetTicks(int offset) { this->beatOffsetTicks = offset; };
 
     void AddFlag(NoteFlag flag) { this->flags &= (1 << flag); };
     void RemoveFlag(NoteFlag flag) { this->flags &= ~(1 << flag); };
@@ -61,13 +65,16 @@ class Note {
     bool CheckFlag(NoteFlag flag) { return (this->flags & (1 << flag)) != 0; };
     void ToggleFlag(NoteFlag flag) { this->flags |= flag; };
 
+
   private:
     int fretNum;
     int stringNum;
     int slideFret;
     Rhythm rhythm;
     uint32_t flags;
-    float lengthInBeats;
+    int lengthInTicks;
+    int beatOffsetTicks;
+
 
     friend class NoteBuilder;
 };

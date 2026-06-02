@@ -1,6 +1,8 @@
 #pragma once
 
-#include "Note.h"
+#include "Beat.h"
+#include <juce_core/juce_core.h>
+#include <memory>
 #include <vector>
 
 struct TimeSig {
@@ -11,15 +13,19 @@ struct TimeSig {
 class Bar {
   public:
     Bar(TimeSig);
-    Bar(std::vector<Note*>, TimeSig);
+    Bar(std::vector<Beat>, TimeSig);
     ~Bar();
-    void AddNote(Note& note);
-    void SetTimeSig(TimeSig timeSig) { this->timeSig = timeSig; }
+    void AddBeat(Beat* beat);
+    void SetTimeSig(TimeSig newTimeSig) { this->timeSig = newTimeSig; }
     const TimeSig GetTimeSig() const { return this->timeSig; }
     const int GetID() { return barId; }
 
+
   private:
+    int numSubBeats;
+    void setNumBeats();
+    int numBeats;
     int barId;
-    std::vector<Note*> notes;
+    std::vector<Beat*> beats;
     TimeSig timeSig;
 };

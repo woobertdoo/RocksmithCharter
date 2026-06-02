@@ -12,7 +12,7 @@ class NoteBuilder {
     void SetFret(int);
     void SetString(int);
     void SetRhythm(Rhythm);
-    void SetLengthInBeats(float);
+    void SetLengthInTicks(float);
     bool ToggleHOPO(Note&);
     bool ToggleTap();
     bool ToggleSlide(int);

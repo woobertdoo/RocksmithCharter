@@ -9,6 +9,7 @@
 #include <memory>
 
 #include "Chart/Chart.h"
+#include "Beat.h"
 #include "IO/GPExtractor.h"
 #include "IO/GPParser.h"
 
@@ -66,7 +67,7 @@ class MainWindowTutorialApplication : public juce::JUCEApplication {
             setUsingNativeTitleBar(true);
             centreWithSize(getWidth(), getHeight());
             setVisible(true);
-            //            loadGPFile();
+            loadGPFile();
         }
 
         void loadGPFile() {

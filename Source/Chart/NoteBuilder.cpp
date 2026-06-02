@@ -12,8 +12,8 @@ void NoteBuilder::SetString(int stringNum) { note->stringNum = stringNum; }
 
 void NoteBuilder::SetRhythm(Rhythm rhythm) { note->rhythm = rhythm; }
 
-void NoteBuilder::SetLengthInBeats(float length) {
-    note->lengthInBeats = length;
+void NoteBuilder::SetLengthInTicks(float length) {
+    note->lengthInTicks = length;
 }
 
 bool NoteBuilder::ToggleHOPO(Note& prevNote) {

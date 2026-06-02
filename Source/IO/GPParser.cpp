@@ -1,11 +1,10 @@
 #include "GPParser.h"
+#include "Note.h"
+#include "NoteBuilder.h"
 #include <bits/stdc++.h>
 #include <hash_map>
 #include <memory>
 #include <sstream>
-
-// ROOT NODE IS GPIF
-//
 
 /*
  * <GPIF>
@@ -258,6 +257,118 @@ XmlVector GPParser::GetBars(std::vector<int> barIds) {
     return bars;
 }
 
+XmlVector GPParser::GetVoices(std::vector<int> voiceIds){
+    XmlVector voices; 
+
+    const juce::XmlElement* voicesNode = rootNode->getChildByName("Voices");  
+    
+    for (auto id: voiceIds) { 
+        const juce::XmlElement* foundVoice =
+            voicesNode->getChildByAttribute("id", juce::String(id));
+        if (!voicesNode) {
+            printf("Couldn't find voice with id %d\n", id);
+            continue;
+        }
+
+        const juce::XmlElement* foundBeats =
+            foundVoice->getChildByName("Beats");
+
+        if (!foundBeats) {
+            printf("Something went very wrong, this voice (%d) has no beats!\n",
+                   id);
+            continue;
+        }
+              
+    }
+    
+
+    return voices;
+}
+
+std::vector<Note*> GPParser::ParseNotes(int beatId) {
+    std::vector<Note*> notes; 
+
+    const juce::XmlElement* beatsNode = rootNode->getChildByName("Beats");
+    
+    const juce::XmlElement* beatNode = beatsNode->getChildByAttribute("id", juce::String(beatId)); 
+    
+    if(!beatNode) {
+        printf("No beat found with ID %d\n", beatId);
+        return notes;
+    }
+
+
+    int rhythmId = beatNode->getChildByName("Rhythm")->getIntAttribute("ref", -1);
+
+    const juce::XmlElement* rhythmsNode = rootNode->getChildByName("Rhythms");
+
+    const juce::XmlElement* rhythmNode = rhythmsNode->getChildByAttribute("id", juce::String(rhythmId));
+
+    if(!rhythmNode) {
+        printf("No rhythm found with ID %d\n", beatId);
+        return notes;
+    }
+
+    Rhythm rhythm;
+    juce::String noteValue = rhythmNode->getChildByName("NoteValue")->getAllSubText();
+    rhythm.baseVal = NoteValueToFlag(noteValue);
+
+    if(juce::XmlElement* tuplet = rhythmNode->getChildByName("PrimaryTuplet")) {
+        int num = tuplet->getIntAttribute("num"); 
+        int den = tuplet->getIntAttribute("den");
+        rhythm.tuple = Tuple{ num, den };
+    }
+
+    if(juce::XmlElement* dots = rhythmNode->getChildByName("AugmentationDot")) {
+        rhythm.dots = dots->getIntAttribute("count");     
+    } 
+
+    std::vector<int> noteIds = splitIds(beatNode->getChildByName("Notes")->getAllSubText().toStdString());
+
+    juce::XmlElement* notesNode = rootNode->getChildByName("Notes");
+    
+    for(int id : noteIds) {
+        const juce::XmlElement* foundNote =
+            notesNode->getChildByAttribute("id", juce::String(id));
+        if (!notesNode) {
+            printf("Couldn't find note with id %d\n", id);
+            continue;
+        }
+        nb.NewNote();   
+        nb.SetRhythm(rhythm); 
+
+        const juce::XmlElement* noteProperties = foundNote->getChildByName("Properties");
+
+        int fretNum = noteProperties->getChildByAttribute("name", "Fret")->getFirstChildElement()->getAllSubText().getIntValue();
+        
+        int stringNum = noteProperties->getChildByAttribute("name", "String")->getFirstChildElement()->getAllSubText().getIntValue();
+
+        nb.SetString(stringNum);
+        nb.SetFret(fretNum);
+    } 
+    return notes;
+}
+
+RhythmFlag GPParser::NoteValueToFlag(juce::String noteValue) {
+    if(noteValue.equalsIgnoreCase("Whole")) {
+        return RHYTHM_WHOLE;
+    } else if(noteValue.equalsIgnoreCase("Half")) {
+        return RHYTHM_HALF;
+    } else if(noteValue.equalsIgnoreCase("Quarter")) {
+        return RHYTHM_QUARTER;
+    } else if(noteValue.equalsIgnoreCase("Eighth")) {
+        return RHYTHM_EIGHTH;
+    } else if(noteValue.equalsIgnoreCase("16th")) {
+        return RHYTHM_SIXTEENTH;
+    } else if(noteValue.equalsIgnoreCase("32nd")) {
+        return RHYTHM_THIRTYSECOND;
+    } else {
+        printf("No rhythm flag exists for %s, please add it!\n", noteValue.toStdString().c_str());
+        return RHYTHM_INVALID;
+    }
+}
+
+
 void GPParser::FindTheWeirdElement() {
     const juce::XmlElement* masterBarsNode =
         rootNode->getChildByName("MasterBars");
@@ -296,4 +407,3 @@ std::vector<int> GPParser::splitIds(std::string ids) {
     return splitVector;
 }
 
-std::vector<int> GPParser::getTrackBars(std::string trackName) {}
