@@ -3,20 +3,20 @@
 /* TECHNIQUE FLAGS */
 #include <cstdint>
 
-enum NoteFlag {
-    NOTE_HOPO_SRC,
-    NOTE_HOPO_DEST,
-    NOTE_TAP,
-    NOTE_SLIDE,
-    NOTE_UNPITCHED_SLIDE,
-    NOTE_MUTE,
-    NOTE_PALMMUTE,
-    NOTE_LINKNEXT,
-    NOTE_VIBRATO,
+enum NoteFlag : uint32_t {
+    NOTE_HOPO_SRC = 0,
+    NOTE_HOPO_DEST = 1,
+    NOTE_TAP = 2,
+    NOTE_SLIDE = 3,
+    NOTE_UNPITCHED_SLIDE = 4,
+    NOTE_MUTE = 5,
+    NOTE_PALMMUTE = 6,
+    NOTE_LINKNEXT = 7,
+    NOTE_VIBRATO = 8,
 };
 
 /* RHYTHM FLAGS */
-enum RhythmFlag {
+enum RhythmFlag : int {
     RHYTHM_INVALID = -1,
     RHYTHM_WHOLE = 1,
     RHYTHM_HALF = 2,
@@ -35,12 +35,16 @@ enum RhythmFlag {
 struct Tuple {
     int num;
     int den;
+
+    static const bool TupleIsEmpty(const Tuple &other) { //
+        return other.den == 1 && other.num == 1;
+    }
 };
 
 struct Rhythm {
-    int baseVal;
+    RhythmFlag baseVal;
     int dots = 0;
-    Tuple tuple{1, 1};
+    Tuple tuple {1, 1};
 };
 
 class Note {
@@ -48,33 +52,44 @@ class Note {
     Note();
     ~Note();
 
-    const int GetFret() { return this->fretNum; };
-    const int GetString() { return this->stringNum; };
-    const int GetLengthInTicks() { return this->lengthInTicks; };
+    const unsigned int GetFret() { return this->fretNum; };
+
+    const unsigned int GetString() { return this->stringNum; };
+
+    const unsigned int GetLengthInTicks() { return this->lengthInTicks; };
+
     const Rhythm GetRhythm() { return this->rhythm; };
-    const int GetBeatOffsetTicks() { return this->beatOffsetTicks; }; 
-    void SetFret(int);
-    void SetString(int);
-    void SetRhythm(Rhythm rhythm) { this->rhythm = rhythm; };
-    void SetLengthInTicks(int length) { this->lengthInTicks = length; };
-    void SetBeatOffsetTicks(int offset) { this->beatOffsetTicks = offset; };
+
+    const unsigned int GetBeatOffsetTicks() { return this->beatOffsetTicks; };
+
+    void SetFret(unsigned int fret) { this->fretNum = fret; };
+
+    void SetString(unsigned int string) { this->stringNum = string; };
+
+    void SetRhythm(Rhythm newRhythm) { this->rhythm = newRhythm; };
+
+    void SetLengthInTicks(unsigned int length) { this->lengthInTicks = length; };
+
+    void SetBeatOffsetTicks(unsigned int offset) { this->beatOffsetTicks = offset; };
 
     void AddFlag(NoteFlag flag) { this->flags &= (1 << flag); };
-    void RemoveFlag(NoteFlag flag) { this->flags &= ~(1 << flag); };
+
+    void RemoveFlag(NoteFlag flag) { this->flags &= ~((uint32_t)1 << flag); };
+
     void ClearFlags() { this->flags = 0; };
+
     bool CheckFlag(NoteFlag flag) { return (this->flags & (1 << flag)) != 0; };
+
     void ToggleFlag(NoteFlag flag) { this->flags |= flag; };
 
-
   private:
-    int fretNum;
-    int stringNum;
-    int slideFret;
+    unsigned int fretNum;
+    unsigned int stringNum;
+    unsigned int slideFret;
     Rhythm rhythm;
     uint32_t flags;
-    int lengthInTicks;
-    int beatOffsetTicks;
-
+    unsigned int lengthInTicks;
+    unsigned int beatOffsetTicks;
 
     friend class NoteBuilder;
 };

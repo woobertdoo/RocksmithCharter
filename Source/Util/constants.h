@@ -1,3 +1,3 @@
 #pragma once
 
-#define CHART_TICKS_PER_BEAT 16
+#define CHART_TICKS_PER_QUARTER 16

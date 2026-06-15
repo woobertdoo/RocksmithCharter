@@ -6,20 +6,21 @@ class NoteBuilder {
   public:
     NoteBuilder();
     void NewNote();
-    void LoadNote(Note&);
+    void LoadNote(Note &);
     ~NoteBuilder();
 
-    void SetFret(int);
-    void SetString(int);
+    void SetFret(unsigned int);
+    void SetString(unsigned int);
     void SetRhythm(Rhythm);
-    void SetLengthInTicks(float);
-    bool ToggleHOPO(Note&);
+    void SetLengthInTicks(unsigned int);
+    bool ToggleHOPO(Note *);
     bool ToggleTap();
-    bool ToggleSlide(int);
+    bool ToggleSlide();
+    bool ToggleUnpitchedSlide(unsigned int);
     bool ToggleLinkNext();
 
     Note BuildNote();
 
   private:
-    Note* note;
+    Note *note;
 };

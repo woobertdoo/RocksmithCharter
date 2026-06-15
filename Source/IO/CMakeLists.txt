@@ -8,3 +8,5 @@ target_include_directories(IO
         ${CMAKE_CURRENT_SOURCE_DIR}
         ../Chart
 )
+
+target_link_libraries(IO PUBLIC UTIL)

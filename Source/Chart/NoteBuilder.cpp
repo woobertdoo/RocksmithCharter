@@ -4,32 +4,37 @@
 NoteBuilder::NoteBuilder() { note = new Note(); }
 
 void NoteBuilder::NewNote() { note = new Note(); }
-void NoteBuilder::LoadNote(Note& note) { this->note = &note; }
 
-void NoteBuilder::SetFret(int fretNum) { note->fretNum = fretNum; }
+void NoteBuilder::LoadNote(Note &note) { this->note = &note; }
 
-void NoteBuilder::SetString(int stringNum) { note->stringNum = stringNum; }
+void NoteBuilder::SetFret(unsigned int fretNum) { note->fretNum = fretNum; }
+
+void NoteBuilder::SetString(unsigned int stringNum) { note->stringNum = stringNum; }
 
 void NoteBuilder::SetRhythm(Rhythm rhythm) { note->rhythm = rhythm; }
 
-void NoteBuilder::SetLengthInTicks(float length) {
-    note->lengthInTicks = length;
-}
+void NoteBuilder::SetLengthInTicks(unsigned int length) { note->lengthInTicks = length; }
 
-bool NoteBuilder::ToggleHOPO(Note& prevNote) {
-    if (note->CheckFlag(NOTE_HOPO_DEST) == NOTE_HOPO_DEST) {
+bool NoteBuilder::ToggleHOPO(Note *prevNote) {
+    if (note->CheckFlag(NOTE_HOPO_DEST)) {
         note->RemoveFlag(NOTE_HOPO_DEST);
-        prevNote.RemoveFlag(NOTE_HOPO_SRC);
+        prevNote->RemoveFlag(NOTE_HOPO_SRC);
         return false;
     } else {
-        note->ToggleFlag(NOTE_HOPO_DEST);
-        prevNote.ToggleFlag(NOTE_HOPO_SRC);
+        note->AddFlag(NOTE_HOPO_DEST);
+        prevNote->AddFlag(NOTE_HOPO_SRC);
         return true;
     }
 }
 
-bool NoteBuilder::ToggleSlide(int slideFret = -1) {
-    note->slideFret = slideFret;
+bool NoteBuilder::ToggleSlide() {
+    note->ToggleFlag(NOTE_SLIDE);
+    return note->CheckFlag(NOTE_SLIDE);
+}
+
+bool NoteBuilder::ToggleUnpitchedSlide(unsigned int endFret = 0) {
+    if (endFret > 0)
+        note->slideFret = endFret;
     note->ToggleFlag(NOTE_SLIDE);
     return note->CheckFlag(NOTE_SLIDE);
 }

@@ -4,7 +4,13 @@
 **/CMakeCache.txt
 **/CMakeFiles/
 **/*.a
+.obsidian/
+Scratch\ +\ Notes.md
 RocksmithCharter_artefacts/
 .cache/
 Content/
 compile_commands.json
+build/
+out/
+test-tabs/
+**/*.gpif
